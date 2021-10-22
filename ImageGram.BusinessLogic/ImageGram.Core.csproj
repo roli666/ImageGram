@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImageGram.DataAccess\ImageGram.Infrastructure.csproj" />
+    <ProjectReference Include="..\ImageGram.SharedKernel\ImageGram.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>
