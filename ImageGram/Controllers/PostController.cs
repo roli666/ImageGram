@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ImageGram.Controllers
 {
@@ -13,32 +14,63 @@ namespace ImageGram.Controllers
     {
         private readonly ILogger<PostController> _logger;
         private readonly IPostService postService;
+        private readonly IImageService imageService;
+        private readonly IFileService fileService;
 
-        public PostController(ILogger<PostController> logger, IPostService postService)
+        public PostController(ILogger<PostController> logger, IPostService postService, IImageService imageService, IFileService fileService)
         {
             _logger = logger;
             this.postService = postService;
+            this.imageService = imageService;
+            this.fileService = fileService;
         }
 
         [HttpPost("/Post")]
-        public async Task<IActionResult> CreatePost(PostDTO post)
+        public async Task<IActionResult> CreatePost(CreatePostDTO post)
         {
-            await postService.CreatePost(post);
-            return Ok();
+            var createdPost = await postService.CreatePost(post);
+            if (post.AttachedImage != null)
+            {
+                var validation = imageService.ValidateImage(post.AttachedImage.ImageBytes);
+                if (!validation)
+                    return ValidationProblem("Image has invalid extension.");
+                var image = await imageService.CreateImage(post.AttachedImage);
+                var postWithImage = await postService.UpdatePost(createdPost.Id, new CreatePostDTO
+                {
+                    AttachedImage = new ImageDTO
+                    {
+                        Id = image.Id,
+                    },
+                    Content = createdPost.Content,
+                    Title = createdPost.Title
+                });
+                return Ok(postWithImage);
+            }
+
+            return Ok(createdPost);
         }
 
-        [HttpGet("/GetPosts")]
+        [HttpGet("/Posts")]
         public async Task<IActionResult> GetPosts()
         {
             var posts = await postService.GetPosts();
             return Ok(posts.OrderByDescending(post => post.Comments.Count()));
         }
 
-        [HttpGet("/GetPosts/{id}/{take}")]
-        public async Task<IActionResult> GetPosts(int cursor, int size)
+        [HttpGet("/Post/Image/{postId}")]
+        public async Task<IActionResult> GetImage(int postId)
+        {
+            var post = await postService.GetPost(postId);
+            var fileStream = fileService.ServeImage(post.AttachedImage);
+
+            return File(fileStream, "image/jpg");
+        }
+
+        [HttpGet("/Posts/{postId}/{postCount}")]
+        public async Task<IActionResult> GetPosts(int cursor, int postCount)
         {
             var posts = await postService.GetPosts();
-            return Ok(posts.OrderBy(post => post.Id).Where(post => post.Id > cursor).Take(size).OrderByDescending(post => post.Comments.Count()));
+            return Ok(posts.OrderBy(post => post.Id).Where(post => post.Id > cursor).Take(postCount).OrderByDescending(post => post.Comments.Count()));
         }
     }
 }

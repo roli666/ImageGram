@@ -14,7 +14,6 @@ namespace ImageGram.Core.Services
         private readonly ImageGramDBContext dbContext;
         private readonly ICommentService commentService;
 
-
         public PostService(ImageGramDBContext dbContext, ICommentService commentService)
         {
             this.dbContext = dbContext;
@@ -25,7 +24,6 @@ namespace ImageGram.Core.Services
         {
             var newPost = dbContext.Add(new Post
             {
-                AttachedImage = post.AttachedImage,
                 Content = post.Content,
                 Title = post.Title
             });
@@ -43,19 +41,30 @@ namespace ImageGram.Core.Services
 
         public async Task<IEnumerable<Post>> GetPosts()
         {
-            return await dbContext.Posts.ToListAsync();
+            var posts = await dbContext.Posts.ToListAsync();
+            foreach (var post in posts)
+            {
+                post.Comments = post.Comments.OrderByDescending(comment => comment.Created).Take(2);
+            }
+            return posts;
         }
 
-        public async Task<Post> UpdatePost(PostDTO postDto)
+        public async Task<Post> GetPost(int postId)
         {
-            var post = await dbContext.Posts.FirstOrDefaultAsync(post => post.Id == postDto.Id);
-            var comments = dbContext.Comments.Where(comment => comment.ParentPostId == postDto.Id);
+            return await dbContext.Posts.FirstOrDefaultAsync(post => post.Id == postId);
+        }
+
+        public async Task<Post> UpdatePost(int postId, CreatePostDTO updatedPost)
+        {
+            var post = await dbContext.Posts.FirstOrDefaultAsync(post => post.Id == postId);
+            var comments = dbContext.Comments.Where(comment => comment.ParentPostId == postId);
+            var image = await dbContext.Images.FirstOrDefaultAsync(image => image.ParentPostId == postId);
             dbContext.Attach(post);
             {
-                post.AttachedImage = postDto.AttachedImage;
+                post.AttachedImage = image;
                 post.Comments = comments;
-                post.Content = postDto.Content;
-                post.Title = postDto.Title;
+                post.Content = updatedPost.Content;
+                post.Title = updatedPost.Title;
             }
             await dbContext.SaveChangesAsync();
             return post;

@@ -16,6 +16,7 @@ namespace ImageGram.Core
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<IFileService, StaticFileService>();
+            services.AddTransient<IImageService, ImageService>();
         }
     }
 }

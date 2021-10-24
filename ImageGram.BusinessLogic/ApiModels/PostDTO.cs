@@ -15,9 +15,6 @@ namespace ImageGram.Core.ApiModels
     {
         public string Title { get; set; }
         public string Content { get; set; }
-
-        [MaxLength(102400)]
-        [JsonConverter(typeof(Base64FileJsonConverter))]
-        public byte[] AttachedImage { get; set; }
+        public CreateImageDTO AttachedImage { get; set; } = null;
     }
 }

@@ -7,7 +7,7 @@ namespace ImageGram.Infrastructure.Entities
     {
         public string Title { get; set; }
         public string Content { get; set; }
-        public byte[] AttachedImage { get; set; }
+        public Image AttachedImage { get; set; } = null;
         public IEnumerable<Comment> Comments { get; set; }
     }
 }

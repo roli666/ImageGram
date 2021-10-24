@@ -8,5 +8,6 @@ namespace ImageGram.Infrastructure.Data
         public ImageGramDBContext(DbContextOptions<ImageGramDBContext> options) : base(options) { }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }
