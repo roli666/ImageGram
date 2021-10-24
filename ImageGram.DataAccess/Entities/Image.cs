@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Mime;
 
 namespace ImageGram.Infrastructure.Entities
 {
@@ -11,6 +9,7 @@ namespace ImageGram.Infrastructure.Entities
         public Post ParentPost { get; set; }
         public string FileName { get; set; }
         public string Extension { get; set; }
+
         public Image(string extension, int parentPostId)
         {
             ParentPostId = parentPostId;

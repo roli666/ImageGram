@@ -16,6 +16,7 @@ namespace ImageGram.Core.Services
         {
             this.dbContext = dbContext;
         }
+
         public async Task<Comment> AddComment(CreateCommentDTO comment)
         {
             var newComment = dbContext.Comments.Add(new Comment

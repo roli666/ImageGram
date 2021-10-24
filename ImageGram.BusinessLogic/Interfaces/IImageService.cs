@@ -7,6 +7,7 @@ namespace ImageGram.Core.Interfaces
     public interface IImageService
     {
         Task<Image> CreateImage(CreateImageDTO createImageDTO);
+
         bool ValidateImage(byte[] imageBytes);
     }
 }

@@ -2,9 +2,8 @@
 using ImageGram.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using System.Linq;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ImageGram.Controllers
 {

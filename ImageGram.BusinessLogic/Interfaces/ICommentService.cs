@@ -7,7 +7,9 @@ namespace ImageGram.Core.Interfaces
     public interface ICommentService
     {
         Task<Comment> AddComment(CreateCommentDTO comment);
+
         Task<Comment> UpdateComment(CommentDTO commentDto);
+
         Task<Comment> RemoveComment(int commentId);
     }
 }

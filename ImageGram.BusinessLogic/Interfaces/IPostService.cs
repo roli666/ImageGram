@@ -8,9 +8,13 @@ namespace ImageGram.Core.Interfaces
     public interface IPostService
     {
         Task<Post> CreatePost(CreatePostDTO post);
+
         Task<Post> UpdatePost(int postId, CreatePostDTO updatedPost);
+
         Task<Post> DeletePost(int postId);
+
         Task<IEnumerable<Post>> GetPosts();
+
         Task<Post> GetPost(int postId);
     }
 }
