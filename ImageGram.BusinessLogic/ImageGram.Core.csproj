@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ImageGram.DataAccess\ImageGram.Infrastructure.csproj" />
     <ProjectReference Include="..\ImageGram.SharedKernel\ImageGram.SharedKernel.csproj" />
   </ItemGroup>

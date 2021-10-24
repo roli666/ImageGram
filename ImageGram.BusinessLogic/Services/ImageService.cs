@@ -28,7 +28,8 @@ namespace ImageGram.Core.Services
 
         public async Task<Image> CreateImage(CreateImageDTO createImageDTO)
         {
-            var newImage = new Image(createImageDTO.ParentPostId);
+            var fileExtension = fileService.GuessFileExtension(createImageDTO.ImageBytes);
+            var newImage = new Image(fileExtension, createImageDTO.ParentPostId);
             dbContext.Images.Add(newImage);
             await fileService.CreateFile(newImage, createImageDTO.ImageBytes);
             await dbContext.SaveChangesAsync();
@@ -39,7 +40,7 @@ namespace ImageGram.Core.Services
         {
             foreach (var signature in allowedImageFileSignatures)
             {
-                if(imageBytes.Take(signature.Length).SequenceEqual(signature))
+                if (imageBytes.Take(signature.Length).SequenceEqual(signature))
                 {
                     return true;
                 }

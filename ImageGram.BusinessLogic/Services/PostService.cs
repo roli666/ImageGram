@@ -12,12 +12,10 @@ namespace ImageGram.Core.Services
     public class PostService : IPostService
     {
         private readonly ImageGramDBContext dbContext;
-        private readonly ICommentService commentService;
 
-        public PostService(ImageGramDBContext dbContext, ICommentService commentService)
+        public PostService(ImageGramDBContext dbContext)
         {
             this.dbContext = dbContext;
-            this.commentService = commentService;
         }
 
         public async Task<Post> CreatePost(CreatePostDTO post)

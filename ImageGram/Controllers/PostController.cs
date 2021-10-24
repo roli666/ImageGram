@@ -12,14 +12,14 @@ namespace ImageGram.Controllers
     [Route("[controller]")]
     public class PostController : ControllerBase
     {
-        private readonly ILogger<PostController> _logger;
+        private readonly ILogger<PostController> logger;
         private readonly IPostService postService;
         private readonly IImageService imageService;
         private readonly IFileService fileService;
 
         public PostController(ILogger<PostController> logger, IPostService postService, IImageService imageService, IFileService fileService)
         {
-            _logger = logger;
+            this.logger = logger;
             this.postService = postService;
             this.imageService = imageService;
             this.fileService = fileService;
@@ -28,6 +28,7 @@ namespace ImageGram.Controllers
         [HttpPost("/Post")]
         public async Task<IActionResult> CreatePost(CreatePostDTO post)
         {
+            logger.LogInformation("Creating new post...");
             var createdPost = await postService.CreatePost(post);
             if (post.AttachedImage != null)
             {
@@ -61,9 +62,9 @@ namespace ImageGram.Controllers
         public async Task<IActionResult> GetImage(int postId)
         {
             var post = await postService.GetPost(postId);
-            var fileStream = fileService.ServeImage(post.AttachedImage);
+            var stream = fileService.ServeImage(post.AttachedImage);
 
-            return File(fileStream, "image/jpg");
+            return File(stream, "image/jpg");
         }
 
         [HttpGet("/Posts/{postId}/{postCount}")]

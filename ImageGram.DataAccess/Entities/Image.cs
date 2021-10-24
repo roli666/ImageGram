@@ -10,11 +10,13 @@ namespace ImageGram.Infrastructure.Entities
         public int ParentPostId { get; set; }
         public Post ParentPost { get; set; }
         public string FileName { get; set; }
-        public Image(int parentPostId)
+        public string Extension { get; set; }
+        public Image(string extension, int parentPostId)
         {
             ParentPostId = parentPostId;
+            Extension = extension;
             Id = Guid.NewGuid();
-            FileName = $"{ParentPostId}_${Id}.jpg";
+            FileName = $"{ParentPostId}_${Id}.{Extension}";
         }
     }
 }
